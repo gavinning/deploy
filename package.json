@@ -1,10 +1,10 @@
 {
   "name": "aimee-deploy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "deploy",
   "main": "app.js",
   "scripts": {
-    "test": "node test"
+    "test": "node example/deploy"
   },
   "repository": {
     "type": "git",

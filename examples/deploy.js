@@ -5,8 +5,7 @@ var gre = Gre.create('[:time][:title][:pm2] :message');
 
 var deploy = new Deploy({
     git: {
-        // url: 'https://github.com/gavinning/deploy-test.git',
-        url : '/Users/gavinning/Documents/lab/github/deploy-test',
+        url: 'https://github.com/gavinning/deploy-test.git',
         target: '/Users/gavinning/Desktop/test1234'
     },
     pm: {
@@ -19,7 +18,7 @@ var deploy = new Deploy({
 
 $(function *(){
     try{
-        yield deploy.clean()
+        // yield deploy.clean()
 
         gre.info('Deploy start...')
         gre.info('Deploy connect repository')
