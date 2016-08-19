@@ -50,31 +50,31 @@ $(function *(){
         // 连接git仓库
         gre.info('Deploy start...')
         gre.info('Deploy connect repository')
-        yield this.git.repo()
+        yield deploy.git.repo()
 
         // 更新git仓库
         gre.info('Deploy pull repository')
-        yield this.git.pull()
+        yield deploy.git.pull()
 
         // 发布新版本
         gre.info('Deploy publish repository')
-        yield this.git.publish()
+        yield deploy.git.publish()
 
         // 安装NPM依赖
         gre.info('Deploy install dependencies...')
-        yield this.npm.install()
+        yield deploy.npm.install()
 
         // 连接pm2
         gre.info('Deploy connect pm2')
-        yield this.pm.connect()
+        yield deploy.pm.connect()
 
         // 启动app
-        gre.info('Deploy start', this.config.pm.name)
-        yield this.pm.start()
+        gre.info('Deploy start', deploy.config.pm.name)
+        yield deploy.pm.start()
 
         // 关闭pm2连接
-        gre.info('Deploy close pm2 connect', this.config.pm.name)
-        this.pm.disconnect()
+        gre.info('Deploy close pm2 connect', deploy.config.pm.name)
+        deploy.pm.disconnect()
 
         gre.info('Deploy all process done!')
     }
@@ -100,23 +100,23 @@ $(function *(){
         // 连接git仓库
         gre.info('Deploy start...')
         gre.info('Deploy connect repository')
-        yield this.git.repo()
+        yield deploy.git.repo()
 
         // 回滚到指定版本
         gre.info('Deploy rollback repository')
-        yield this.git.rollback(tagName)
+        yield deploy.git.rollback(tagName)
 
         // 连接pm2
         gre.info('Deploy connect pm2')
-        yield this.pm.connect()
+        yield deploy.pm.connect()
 
         // 启动app
-        gre.info('Deploy start', this.config.pm.name)
-        yield this.pm.start()
+        gre.info('Deploy start', deploy.config.pm.name)
+        yield deploy.pm.start()
 
         // 关闭pm2连接
-        gre.info('Deploy close pm2 connect', this.config.pm.name)
-        this.pm.disconnect()
+        gre.info('Deploy close pm2 connect', deploy.config.pm.name)
+        deploy.pm.disconnect()
 
         gre.info('Deploy all process done!')
     }

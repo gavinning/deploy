@@ -16,6 +16,6 @@ var deploy = new Deploy({
     }
 })
 
-// deploy.publish()
+deploy.publish()
 
-deploy.rollback('v20160819-180302-527')
+// deploy.rollback('v20160819-180205-084')
