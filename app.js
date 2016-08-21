@@ -70,11 +70,11 @@ class Deploy {
         })
     }
 
-    rollback(tagName) {
+    rollback(tagName, dependencies) {
         return this.goto(tagName)
     }
 
-    goto(tagName) {
+    goto(tagName, dependencies) {
         return new Promise((res, rej) => {
             $.call(this, function *(){
                 try{
