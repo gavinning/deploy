@@ -31,7 +31,7 @@ class Deploy {
         })
     }
 
-    publish() {
+    publish(dependencies) {
         return new Promise((res, rej) => {
             $.call(this, function *(){
                 try{
@@ -45,8 +45,11 @@ class Deploy {
                     gre.info('Deploy publish repository')
                     var tag = yield this.git.publish()
 
-                    gre.info('Deploy install dependencies...')
-                    yield this.npm.install()
+                    // 默认安装依赖
+                    if(dependencies || dependencies === undefined){
+                        gre.info('Deploy install dependencies...')
+                        yield this.npm.install()
+                    }
 
                     gre.info('Deploy connect pm2')
                     yield this.pm.connect()
@@ -82,7 +85,13 @@ class Deploy {
 
                     // 回滚到指定版本
                     gre.info('Deploy rollback repository')
-                    yield this.git.rollback(tagName)
+                    var tag = yield this.git.rollback(tagName)
+
+                    // 默认不安装依赖
+                    if(dependencies){
+                        gre.info('Deploy install dependencies...')
+                        yield this.npm.install()
+                    }
 
                     // 连接pm2
                     gre.info('Deploy connect pm2')
@@ -97,9 +106,11 @@ class Deploy {
                     this.pm.disconnect()
 
                     gre.info('Deploy all process done!')
+
+                    res(tag)
                 }
                 catch(e){
-                    console.log(e.message)
+                    rej(e)
                 }
             })
         })
@@ -109,12 +120,21 @@ class Deploy {
         return new Promise((res, rej) => {
             $.call(this, function *(){
                 try{
+                    // 检查仓库是否已经打开
                     if(!this.git.repository)
                         yield this.git.repo()
                     var arr = []
+                    // 获取tags列表
                     var tags = yield this.git.tags()
+                    // 当前生效的Tag.targetCommit
+                    var commit = yield deploy.git.repository.getHeadCommit()
                     for(let i=0, len=tags.length; i<len; i++){
+                        // 获取tag实例
                         let tag = yield this.git.repository.getTagByName(tags[i])
+                        // 检查当前生效的tag
+                        commit.id().equal(tag.targetId()) ?
+                            tag.running = true:
+                            tag.running = false;
                         arr.push(tag)
                     }
                     res(arr)
