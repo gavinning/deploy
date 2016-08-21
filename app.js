@@ -43,7 +43,7 @@ class Deploy {
                     yield this.git.pull()
 
                     gre.info('Deploy publish repository')
-                    yield this.git.publish()
+                    var tag = yield this.git.publish()
 
                     gre.info('Deploy install dependencies...')
                     yield this.npm.install()
@@ -58,7 +58,7 @@ class Deploy {
                     this.pm.disconnect()
 
                     gre.info('Deploy all process done!')
-                    res()
+                    res(tag)
                 }
                 catch(e){
                     rej(e)
@@ -100,6 +100,27 @@ class Deploy {
                 }
                 catch(e){
                     console.log(e.message)
+                }
+            })
+        })
+    }
+
+    tags() {
+        return new Promise((res, rej) => {
+            $.call(this, function *(){
+                try{
+                    if(!this.git.repository)
+                        yield this.git.repo()
+                    var arr = []
+                    var tags = yield this.git.tags()
+                    for(let i=0, len=tags.length; i<len; i++){
+                        let tag = yield this.git.repository.getTagByName(tags[i])
+                        arr.push(tag)
+                    }
+                    res(arr)
+                }
+                catch(err){
+                    rej(err)
                 }
             })
         })
